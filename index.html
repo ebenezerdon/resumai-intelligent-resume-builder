@@ -201,11 +201,12 @@
                 <span class="font-serif font-bold text-xl">Resumai</span>
              </div>
              <p class="text-slate-500 mb-4">Built with <span class="text-red-500">♥</span> by <a href="https://teda.dev" target="_blank" class="text-slate-800 font-medium hover:underline">Teda.dev</a>.</p>
-             <p class="text-slate-400 text-sm">&copy; 2024 Resumai. All rights reserved.</p>
+             <p class="text-slate-400 text-sm">&copy; <span id="year"></span> Resumai. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
