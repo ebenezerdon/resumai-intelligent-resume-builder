@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor - Resumai</title>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss-cdn@3.4.10/tailwindcss.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <style type="text/tailwindcss" data-teda="tailwind-apply">
+        @layer components {
+            .input-group { @apply flex flex-col gap-1.5 mb-4; }
+            .input-label { @apply text-sm font-medium text-slate-700; }
+            .form-input { @apply w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all; }
+            .section-btn { @apply w-full text-left px-4 py-3 rounded-lg text-slate-600 font-medium hover:bg-slate-100 focus:outline-none focus:bg-emerald-50 focus:text-emerald-700 transition-colors flex items-center justify-between; }
+            .section-btn.active { @apply bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-200; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 h-screen overflow-hidden flex flex-col">
+
+    <!-- Top Header -->
+    <header class="bg-white border-b border-slate-200 h-16 shrink-0 z-20 relative">
+        <div class="h-full px-4 lg:px-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <div class="w-8 h-8">
+                        <img src="logo.svg" alt="Logo" class="w-full h-full object-contain">
+                    </div>
+                    <span class="font-serif font-bold text-lg text-slate-800 group-hover:text-emerald-600 transition-colors">Resumai</span>
+                </a>
+                <div class="h-6 w-px bg-slate-300 mx-2 hidden sm:block"></div>
+                <div class="hidden sm:flex items-center gap-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Template:</span>
+                    <select id="template-selector" class="text-sm border-none bg-transparent font-medium text-slate-700 focus:ring-0 cursor-pointer hover:text-emerald-600">
+                        <option value="modern">Modern Clean</option>
+                        <option value="classic">Classic Serif</option>
+                        <option value="minimal">Minimalist Mono</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="ai-status" class="hidden items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs text-slate-600 font-medium" id="ai-status-text">AI Ready</span>
+                </div>
+                <button id="btn-reset" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Reset Data">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+                <button id="btn-print" class="bg-slate-900 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-lg shadow-slate-900/20 hover:bg-slate-800 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- Left: Editor Panel -->
+        <aside class="w-full lg:w-[450px] xl:w-[500px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-10">
+            <div class="p-4 border-b border-slate-100">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sections</h2>
+                <div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar" id="section-nav">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-slate-50/50 relative">
+                <div id="editor-container" class="max-w-lg mx-auto">
+                    <!-- Dynamic Forms Injected Here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right: Preview Panel -->
+        <div class="flex-1 bg-gray-200 overflow-auto relative p-12 text-center block custom-scrollbar" id="preview-scroller">
+            <!-- Zoom/Fit Controls -->
+            <div class="fixed bottom-6 right-6 flex items-center bg-white border border-slate-200 rounded-full shadow-lg p-1 z-30">
+                 <button id="zoom-out" class="p-2 hover:bg-slate-100 rounded-full text-slate-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                 </button>
+                 <span id="zoom-level" class="text-xs font-mono w-12 text-center text-slate-500">100%</span>
+                 <button id="zoom-in" class="p-2 hover:bg-slate-100 rounded-full text-slate-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                 </button>
+            </div>
+
+            <!-- The Resume Paper -->
+            <div id="resume-preview" class="inline-block text-left bg-white shadow-2xl shadow-slate-400/20 w-[210mm] min-h-[297mm] origin-top transition-transform duration-200">
+                <!-- Resume Content Rendered Here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- AI Loading Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all scale-100 opacity-100">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
+                    <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Initializing AI Model</h3>
+                <p class="text-slate-500 text-sm mb-6">Downloading the local LLM (~1.6GB). This happens once and is cached for instant future use.</p>
+                
+                <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                    <div id="ai-progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs font-mono text-slate-400">
+                    <span id="ai-progress-text">0%</span>
+                    <span>Qwen2.5-1.5B</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/helpers.js"></script>
+    <script src="scripts/ai.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

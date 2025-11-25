@@ -1,0 +1,242 @@
+/* Global Reset & Base */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.animate-bounce-slow {
+    animation: bounce-slow 3s infinite ease-in-out;
+}
+
+/* Resume Paper Base */
+#resume-preview {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #1e293b;
+    background-color: white;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* === TEMPLATE STYLES === */
+/* MODERN TEMPLATE */
+.tpl-modern {
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 32% 68%;
+    height: 100%;
+    min-height: 297mm;
+}
+.tpl-modern .resume-sidebar {
+    background-color: transparent;
+    padding: 2.5rem;
+    color: #334155;
+    border-right: 1px solid #e2e8f0;
+}
+.tpl-modern .resume-main {
+    padding: 3rem;
+    background-color: white;
+}
+.tpl-modern h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    color: #0f172a;
+}
+.tpl-modern .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #059669;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.tpl-modern .resume-sidebar .section-title {
+    color: #64748b;
+    border-color: #cbd5e1;
+}
+
+/* CLASSIC TEMPLATE */
+.tpl-classic {
+    padding: 3rem;
+    font-family: 'Merriweather', serif;
+}
+.tpl-classic h1 {
+    text-align: center;
+    font-size: 2.25rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.tpl-classic .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ddd;
+    margin: 1.5rem 0 1rem 0;
+    padding-bottom: 0.25rem;
+    color: #444;
+}
+.tpl-classic .contact-info {
+    text-align: center;
+    font-size: 0.85rem;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+/* MINIMAL TEMPLATE */
+.tpl-minimal {
+    font-family: 'Lato', sans-serif;
+    padding: 3rem;
+}
+.tpl-minimal h1 {
+    font-weight: 300;
+    font-size: 3rem;
+    color: #000;
+    margin-bottom: 0.5rem;
+}
+.tpl-minimal .header-block {
+    margin-bottom: 3rem;
+}
+.tpl-minimal .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+/* Common Resume Elements */
+.resume-item {
+    margin-bottom: 1rem;
+}
+.job-header, .edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.25rem;
+}
+.job-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+.job-company {
+    font-weight: 500;
+    color: #555;
+}
+.job-date {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+.resume-ul {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+}
+.resume-ul li {
+    margin-bottom: 0.3rem;
+}
+
+/* Print Overrides */
+@media print {
+    @page {
+        margin: 0;
+        size: auto;
+    }
+    body, html {
+        height: auto;
+        overflow: visible;
+        background: white;
+    }
+    header, aside, #toast-container, #ai-modal, #preview-scroller > div:not(#resume-preview) {
+        display: none !important;
+    }
+    #preview-scroller {
+        padding: 0;
+        margin: 0;
+        background: white;
+        overflow: visible;
+        position: static;
+        display: block;
+    }
+    #resume-preview {
+        transform: none !important;
+        box-shadow: none;
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    /* Ensure templates print correctly */
+    .tpl-modern {
+        display: grid;
+        grid-template-columns: 32% 68%;
+        height: 100vh;
+    }
+}
+
+/* Utility */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+.shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0));
+    animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
